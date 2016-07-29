@@ -48,7 +48,7 @@ func LaunchServer() {
 	// WebSocket handler
 	http.Handle("/client/connect", websocket.Handler(func(ws *websocket.Conn) {
 		client := clientList.RegisterClient(ws)
-		defer client.Unregister()
+		defer clientList.UnregisterClient(client)
 	}))
 
 	http.ListenAndServe(":8080", nil)
