@@ -82,6 +82,7 @@ func (client *Client) Send(msg Message) {
 }
 
 // Unregister the client
-func (*Client) Unregister() {
-
+func (client *Client) Unregister() {
+	log.Println("Closing connection of Client: ", client.ID)
+	client.conn.Close()
 }
