@@ -21,20 +21,22 @@ func onClientConnect(ws *websocket.Conn) {
 // LaunchServer will launch a server that will handle client request
 func LaunchServer() {
 	log.Println("Launching http server...")
+	clientList := CreateClientList()
 
 	http.HandleFunc("/client/register", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("On [/client/register] call")
 		defer r.Body.Close()
 
-		id := RegisterClient(42)
-		w.Write([]byte(strconv.FormatInt(int64(id), 10)))
+		client := clientList.RegisterClient(nil)
+
+		w.Write([]byte(strconv.FormatInt(int64(client.ID), 10)))
 	})
 
 	http.HandleFunc("/client/list", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("On [/client/list] call")
 		defer r.Body.Close()
 
-		w.Write([]byte(fmt.Sprint(GetClientList())))
+		w.Write([]byte(fmt.Sprint(clientList.GetClientIDList())))
 	})
 
 	http.HandleFunc("/message/send/", func(w http.ResponseWriter, r *http.Request) {
