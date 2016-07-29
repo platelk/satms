@@ -19,10 +19,10 @@ type ClientList struct {
 }
 
 // RegisterClient add a new client inside the list of already known client
-func (clientList *ClientList) RegisterClient(val int) *Client {
-	var client Client
-	clientList.clients[client.ID] = &client
-	return &client
+func (clientList *ClientList) RegisterClient(ws *websocket.Conn) *Client {
+	client := CreateClient(ws)
+	clientList.clients[client.ID] = client
+	return client
 }
 
 // GetClientIDList return an array with all the client registered
