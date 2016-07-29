@@ -5,7 +5,18 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+
+	"golang.org/x/net/websocket"
 )
+
+// Handle websocket succesfull connection
+func onClientConnect(ws *websocket.Conn) {
+	defer func() { // Handle client disconnection
+		ws.Close()
+	}()
+
+	log.Println("New client connection")
+}
 
 // LaunchServer will launch a server that will handle client request
 func LaunchServer() {
@@ -31,6 +42,8 @@ func LaunchServer() {
 		defer r.Body.Close()
 
 	})
+
+	http.Handle("/client/connect", websocket.Handler(onClientConnect))
 
 	http.ListenAndServe(":8080", nil)
 }
