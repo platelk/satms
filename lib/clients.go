@@ -4,13 +4,12 @@
 //   - ...
 package satms
 
-import (
-	"log"
-)
+import "log"
 
 // Client is a convinient representation of a client registered in the service
 type Client struct {
-	id string
+	// Id is an unique identifier for the client
+	ID string
 }
 
 // client
