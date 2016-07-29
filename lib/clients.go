@@ -19,17 +19,17 @@ type ClientList struct {
 }
 
 // RegisterClient add a new client inside the list of already known client
-func (*ClientList) RegisterClient(val int) int {
-	id := GenerateID()
-	clients[id] = val
-	return id
+func (clientList *ClientList) RegisterClient(val int) *Client {
+	var client Client
+	clientList.clients[client.ID] = &client
+	return &client
 }
 
-// GetClientList return an array with all the client registered
-func (*ClientList) GetClientIDList() []int {
-	clientsID := make([]int, len(clients))
+// GetClientIDList return an array with all the client registered
+func (clientList *ClientList) GetClientIDList() []int {
+	clientsID := make([]int, len(clientList.clients))
 	i := 0
-	for k := range clients {
+	for k := range clientList.clients {
 		clientsID[i] = k
 		i++
 	}
@@ -37,16 +37,20 @@ func (*ClientList) GetClientIDList() []int {
 	return clientsID
 }
 
-// InitClients initialize the necessary component for client management and registration
-func InitClients() {
+// CreateClientList create and initialize the necessary component for a ClientList
+func CreateClientList() *ClientList {
 	log.Println("Init clients data...")
-	clients = make(map[int]int)
+	var cl ClientList
+
+	cl.clients = make(map[int]*Client)
+
+	return &cl
 }
 
 // Client is a convinient representation of a client registered in the service
 type Client struct {
 	// Id is an unique identifier for the client
-	ID string
+	ID int
 
 	conn *websocket.Conn
 }
@@ -58,6 +62,16 @@ var uniqueID int
 func GenerateID() int {
 	uniqueID++
 	return uniqueID
+}
+
+// CreateClient will allocate and initialize a new client
+func CreateClient(ws *websocket.Conn) *Client {
+	var newClient Client
+
+	newClient.ID = GenerateID()
+	newClient.conn = ws
+
+	return &newClient
 }
 
 // Send a message to the Client
