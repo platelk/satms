@@ -71,12 +71,14 @@ func CreateClient(ws *websocket.Conn) *Client {
 	newClient.ID = GenerateID()
 	newClient.conn = ws
 
+	log.Println("Create new client with ID = ", newClient.ID)
+
 	return &newClient
 }
 
 // Send a message to the Client
-func (*Client) Send(msg []byte) {
-
+func (client *Client) Send(msg Message) {
+	client.conn.Write(msg.content)
 }
 
 // Unregister the client

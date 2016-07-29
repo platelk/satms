@@ -8,6 +8,5 @@ import (
 
 func main() {
 	log.Println("Launching satms...")
-	satms.InitClients()
 	satms.LaunchServer()
 }
