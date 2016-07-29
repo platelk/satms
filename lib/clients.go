@@ -10,9 +10,6 @@ import (
 	"golang.org/x/net/websocket"
 )
 
-// client
-var clients map[int]int
-
 // ClientList will simplify management of mutiple client and basic action on this clients
 type ClientList struct {
 	clients map[int]*Client
