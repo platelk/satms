@@ -1,14 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"net/http"
-	"strconv"
+
+	"github.com/platelk/satms/lib"
 )
 
 func main() {
 	log.Println("Launching satms...")
-	InitClients()
-	LaunchServer()
+	satms.InitClients()
+	satms.LaunchServer()
 }

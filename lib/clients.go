@@ -4,11 +4,14 @@
 //   - ...
 package satms
 
+import (
+	"log"
+)
+
 // Client is a convinient representation of a client registered in the service
 type Client struct {
-    id string
+	id string
 }
-
 
 // client
 var clients map[int]int
