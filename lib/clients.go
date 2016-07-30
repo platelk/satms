@@ -5,6 +5,8 @@
 package satms
 
 import (
+	"fmt"
+	"io"
 	"log"
 
 	"golang.org/x/net/websocket"
@@ -49,9 +51,12 @@ func CreateClientList() *ClientList {
 // Client is a convinient representation of a client registered in the service
 type Client struct {
 	// Id is an unique identifier for the client
-	ID int
+	ID      int
+	MsgRecv chan *Message
 
-	conn *websocket.Conn
+	conn      *websocket.Conn
+	msgToSend chan *Message
+	quitChan  chan bool
 }
 
 // internal counter
@@ -65,20 +70,56 @@ func GenerateID() int {
 
 // CreateClient will allocate and initialize a new client
 func CreateClient(ws *websocket.Conn) *Client {
-	newClient := &Client{GenerateID(), ws}
+	newClient := &Client{GenerateID(), make(chan *Message), ws, make(chan *Message), make(chan bool)}
 
 	log.Println("Create new client with ID = ", newClient.ID)
 
 	return newClient
 }
 
+// Listen for incoming message and handle queue of message to send
+func (client *Client) Listen() (err error) {
+	for {
+		select {
+		case msg := <-client.msgToSend:
+			client.write(msg)
+		case <-client.quitChan:
+			client.conn.Close()
+			return nil
+		default:
+			var msg Message
+			err := websocket.JSON.Receive(client.conn, &msg)
+			if err == io.EOF {
+				client.quitChan <- true
+				return fmt.Errorf("Client %d is disconnected", client.ID)
+			}
+			client.MsgRecv <- &msg
+
+		}
+	}
+}
+
+// Internal write function
+func (client *Client) write(msg *Message) {
+	err := websocket.JSON.Send(client.conn, msg)
+	if err != nil {
+		client.Unregister()
+	}
+}
+
 // Send a message to the Client
-func (client *Client) Send(msg *Message) {
-	websocket.JSON.Send(client.conn, msg)
+func (client *Client) Send(msg *Message) (err error) {
+	select {
+	case client.msgToSend <- msg:
+	default:
+		client.quitChan <- true
+		return fmt.Errorf("Client %d is disconnected", client.ID)
+	}
+	return nil
 }
 
 // Unregister the client
 func (client *Client) Unregister() {
 	log.Println("Closing connection of Client: ", client.ID)
-	client.conn.Close()
+	client.quitChan <- true
 }
