@@ -42,11 +42,8 @@ func (clientList *ClientList) GetClientIDList() []int {
 // CreateClientList create and initialize the necessary component for a ClientList
 func CreateClientList() *ClientList {
 	log.Println("Init clients data...")
-	var cl ClientList
 
-	cl.clients = make(map[int]*Client)
-
-	return &cl
+	return &ClientList{make(map[int]*Client)}
 }
 
 // Client is a convinient representation of a client registered in the service
@@ -68,14 +65,11 @@ func GenerateID() int {
 
 // CreateClient will allocate and initialize a new client
 func CreateClient(ws *websocket.Conn) *Client {
-	var newClient Client
-
-	newClient.ID = GenerateID()
-	newClient.conn = ws
+	newClient := &Client{GenerateID(), ws}
 
 	log.Println("Create new client with ID = ", newClient.ID)
 
-	return &newClient
+	return newClient
 }
 
 // Send a message to the Client
