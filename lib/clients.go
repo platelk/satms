@@ -104,6 +104,7 @@ func (client *Client) Listen() (err error) {
 	for {
 		select {
 		case msg := <-client.msgToSend:
+			msg.To = client.ID
 			client.write(msg)
 		case <-client.quitChan:
 			client.conn.Close()
