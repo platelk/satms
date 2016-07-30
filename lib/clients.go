@@ -89,10 +89,12 @@ func (client *Client) Listen() (err error) {
 		default:
 			var msg Message
 			err := websocket.JSON.Receive(client.conn, &msg)
+			log.Println("Client ", client.ID, " receive : ", msg)
 			if err == io.EOF {
 				client.quitChan <- true
 				return fmt.Errorf("Client %d is disconnected", client.ID)
 			}
+			msg.From = client.ID
 			client.MsgRecv <- &msg
 
 		}
