@@ -84,6 +84,23 @@ func CreateClient(ws *websocket.Conn) *Client {
 
 // Listen for incoming message and handle queue of message to send
 func (client *Client) Listen() (err error) {
+	go func() {
+		for {
+			select {
+			case <-client.quitChan:
+				client.conn.Close()
+			default:
+				var msg Message
+				err := websocket.JSON.Receive(client.conn, &msg)
+				log.Println("Client ", client.ID, " receive : ", msg)
+				if err == io.EOF {
+					client.quitChan <- true
+				}
+				msg.From = client.ID
+				client.MsgRecv <- &msg
+			}
+		}
+	}()
 	for {
 		select {
 		case msg := <-client.msgToSend:
@@ -91,23 +108,13 @@ func (client *Client) Listen() (err error) {
 		case <-client.quitChan:
 			client.conn.Close()
 			return nil
-		default:
-			var msg Message
-			err := websocket.JSON.Receive(client.conn, &msg)
-			log.Println("Client ", client.ID, " receive : ", msg)
-			if err == io.EOF {
-				client.quitChan <- true
-				return fmt.Errorf("Client %d is disconnected", client.ID)
-			}
-			msg.From = client.ID
-			client.MsgRecv <- &msg
-
 		}
 	}
 }
 
 // Internal write function
 func (client *Client) write(msg *Message) {
+	log.Println("client: write message ", msg)
 	err := websocket.JSON.Send(client.conn, msg)
 	if err != nil {
 		client.Unregister()
@@ -116,6 +123,7 @@ func (client *Client) write(msg *Message) {
 
 // Send a message to the Client
 func (client *Client) Send(msg *Message) (err error) {
+
 	select {
 	case client.msgToSend <- msg:
 	default:
