@@ -80,7 +80,7 @@ func CreateClient(ws *websocket.Conn) *Client {
 
 // Send a message to the Client
 func (client *Client) Send(msg Message) {
-	client.conn.Write(msg.content)
+	websocket.JSON.Send(client.conn, msg)
 }
 
 // Unregister the client
