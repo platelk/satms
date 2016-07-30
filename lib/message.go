@@ -2,7 +2,7 @@ package satms
 
 // Message represent a basic message exchange between clients
 type Message struct {
-	from    int
-	to      int
-	content []byte
+	From int    `json:"from"`
+	To   int    `json:"to"`
+	Body string `json:"body"`
 }
