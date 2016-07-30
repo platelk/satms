@@ -73,7 +73,7 @@ func CreateClient(ws *websocket.Conn) *Client {
 }
 
 // Send a message to the Client
-func (client *Client) Send(msg Message) {
+func (client *Client) Send(msg *Message) {
 	websocket.JSON.Send(client.conn, msg)
 }
 
