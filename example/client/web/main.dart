@@ -20,7 +20,14 @@ void setupSending(WebSocket ws) {
   });
 }
 
+void setupGetClientList(WebSocket ws) {
+  querySelector("#client_list").onClick.listen((MouseEvent e) {
+    ws.sendString(JSON.encode({"topic": "clientList"}));
+  });
+}
+
 main() async {
     var ws = connectClient();
     setupSending(ws);
+    setupGetClientList(ws);
 }
