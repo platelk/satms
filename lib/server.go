@@ -2,6 +2,7 @@ package satms
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -81,6 +82,7 @@ func InitServerRoute() {
 
 // LaunchServer will launch a server that will handle client request
 func LaunchServer() {
+	log.SetOutput(ioutil.Discard)
 	InitServerRoute()
 	http.ListenAndServe(":4242", nil)
 }
