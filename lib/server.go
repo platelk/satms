@@ -46,9 +46,10 @@ func LaunchServer() {
 		to, _ := strconv.ParseInt(r.URL.Query().Get("to"), 10, 32)
 		from, _ := strconv.ParseInt(r.URL.Query().Get("from"), 10, 32)
 		body := r.URL.Query().Get("body")
+		topic := r.URL.Query().Get("topic")
 
 		log.Println("Send to client ", to)
-		clientList.Get(int(to)).Send(&Message{int(from), int(to), body})
+		clientList.Get(int(to)).Send(&Message{topic, int(from), int(to), body})
 	})
 
 	// WebSocket handler
