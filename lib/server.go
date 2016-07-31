@@ -15,12 +15,12 @@ func handleSocketMessage(clientList *ClientList, client *Client) {
 		select {
 		case msg := <-client.MsgRecv:
 			log.Print("Message receive !!")
-			if msg.Topic == "msg" {
-				clientList.Get(msg.To).Send(msg)
-			} else if msg.Topic == "myId" {
+			if msg.Topic == "myId" {
 				client.Send(&Message{Topic: "myId", Body: strconv.FormatInt(int64(client.ID), 10)})
 			} else if msg.Topic == "clientList" {
 				client.Send(&Message{Topic: "clientList", Body: fmt.Sprint(clientList.GetClientIDList())})
+			} else {
+				clientList.Get(msg.To).Send(msg)
 			}
 		}
 	}
