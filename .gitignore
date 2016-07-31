@@ -28,3 +28,7 @@ _testmain.go
 pubspec.lock
 packages/
 .packages
+
+# Editor
+
+.atom/

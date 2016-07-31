@@ -64,5 +64,5 @@ func InitServerRoute() {
 // LaunchServer will launch a server that will handle client request
 func LaunchServer() {
 	InitServerRoute()
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":4242", nil)
 }

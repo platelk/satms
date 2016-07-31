@@ -3,3 +3,4 @@ version: 0.0.1
 description: Example of client used with SATMS server
 dependencies:
   html: "^0.13.0"
+  browser: any
