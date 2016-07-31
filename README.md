@@ -11,6 +11,7 @@ SATMS is a messaging server that enable communication of client through WebSocke
 
 The message struct is quite simple :
 
+- topic : Topic of the message
 - to : Id of the client you want to send a message to
 - from : Id of the sender
 - body : content of the message
