@@ -24,6 +24,12 @@ func (clientList *ClientList) RegisterClient(ws *websocket.Conn) *Client {
 	return client
 }
 
+// Register add an existing client inside the list of already known client
+func (clientList *ClientList) Register(client *Client) *Client {
+	clientList.clients[client.ID] = client
+	return client
+}
+
 // Get a client by his ID
 func (clientList *ClientList) Get(id int) *Client {
 	return clientList.clients[id]
@@ -32,6 +38,7 @@ func (clientList *ClientList) Get(id int) *Client {
 // UnregisterClient will remove the client from the list of known client and will Unregister the client
 func (clientList *ClientList) UnregisterClient(client *Client) {
 	client.Unregister()
+	delete(clientList.clients, client.ID)
 }
 
 // GetClientIDList return an array with all the client registered
