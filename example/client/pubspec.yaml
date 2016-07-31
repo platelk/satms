@@ -1,0 +1,5 @@
+name: satms_client_example
+version: 0.0.1
+description: Example of client used with SATMS server
+dependencies:
+  html: "^0.13.0"
