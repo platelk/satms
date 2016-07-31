@@ -144,5 +144,9 @@ func (client *Client) Send(msg *Message) (err error) {
 // Unregister the client
 func (client *Client) Unregister() {
 	log.Println("Closing connection of Client: ", client.ID)
-	client.quitChan <- true
+	select {
+	case client.quitChan <- true:
+	default:
+		log.Println("Unregister on already Unregistered client")
+	}
 }
