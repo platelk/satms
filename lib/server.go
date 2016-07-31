@@ -9,6 +9,23 @@ import (
 	"golang.org/x/net/websocket"
 )
 
+func handleSocketMessage(clientList *ClientList, client *Client) {
+	log.Print("Start listening socket message")
+	for {
+		select {
+		case msg := <-client.MsgRecv:
+			log.Print("Message receive !!")
+			if msg.Topic == "msg" {
+				clientList.Get(msg.To).Send(msg)
+			} else if msg.Topic == "myId" {
+				client.Send(&Message{Body: strconv.FormatInt(int64(client.ID), 10)})
+			} else if msg.Topic == "clientList" {
+				client.Send(&Message{Body: fmt.Sprint(clientList.GetClientIDList())})
+			}
+		}
+	}
+}
+
 // Handle websocket succesfull connection
 func onClientConnect(ws *websocket.Conn) {
 	defer func() { // Handle client disconnection
@@ -57,6 +74,7 @@ func InitServerRoute() {
 		client := clientList.RegisterClient(ws)
 		defer clientList.UnregisterClient(client)
 
+		go handleSocketMessage(clientList, client)
 		client.Listen()
 	}))
 }
