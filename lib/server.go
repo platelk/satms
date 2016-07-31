@@ -2,7 +2,6 @@ package satms
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,7 +20,10 @@ func handleSocketMessage(clientList *ClientList, client *Client) {
 			} else if msg.Topic == "clientList" {
 				client.Send(&Message{Topic: "clientList", Body: fmt.Sprint(clientList.GetClientIDList())})
 			} else {
-				clientList.Get(msg.To).Send(msg)
+				client := clientList.Get(msg.To)
+				if client != nil {
+					client.Send(msg)
+				}
 			}
 		}
 	}
@@ -82,7 +84,6 @@ func InitServerRoute() {
 
 // LaunchServer will launch a server that will handle client request
 func LaunchServer() {
-	log.SetOutput(ioutil.Discard)
 	InitServerRoute()
 	http.ListenAndServe(":4242", nil)
 }
