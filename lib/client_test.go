@@ -12,29 +12,23 @@ func TestCreateClientList(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
 	var newClientList *ClientList
 
-	newClientList = CreateClientList()
+	newClientList = CreateClientList(1)
 	if newClientList == nil {
 		t.Error("Return nil object")
 	}
-	if newClientList.clients == nil {
+	if newClientList.shards == nil {
 		t.Error("Internal map not initialize")
-	}
-	if len(newClientList.clients) != 0 {
-		t.Error("Internal map not empty on creation")
 	}
 }
 
 // TestRegister will test if the registering of an existing client works correctly
 func TestRegister(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
-	newClientList := CreateClientList()
+	newClientList := CreateClientList(1)
 	newClient := CreateClient(nil)
 
 	newClientList.Register(newClient)
-	if len(newClientList.clients) != 1 {
-		t.Error("Client not correctly added in the internal map")
-	}
-	if newClientList.clients[newClient.ID] != newClient {
+	if newClientList.Get(newClient.ID) != newClient {
 		t.Error("Wrong client registered")
 	}
 }
@@ -42,13 +36,13 @@ func TestRegister(t *testing.T) {
 // TestRegisterClient will test if registering a non-existing client
 func TestRegisterClient(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
-	newClientList := CreateClientList()
+	newClientList := CreateClientList(1)
 	newClient := newClientList.RegisterClient(nil)
 
-	if len(newClientList.clients) != 1 {
+	if len(newClientList.shards[0].clients) != 1 {
 		t.Error("Client not correctly added in the internal map")
 	}
-	if newClientList.clients[newClient.ID] != newClient {
+	if newClientList.shards[0].clients[newClient.ID] != newClient {
 		t.Error("Wrong client registered")
 	}
 }
@@ -56,7 +50,7 @@ func TestRegisterClient(t *testing.T) {
 // TestGet will test to retreive different previously registered client
 func TestGet(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
-	newClientList := CreateClientList()
+	newClientList := CreateClientList(1)
 	var clientArray [5]*Client
 
 	for i := 0; i < 5; i++ {
@@ -76,7 +70,7 @@ func TestGet(t *testing.T) {
 // TestUnregisterClient will verify that on Unregister the client is correctly removed of the internal map
 func TestUnregisterClient(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
-	newClientList := CreateClientList()
+	newClientList := CreateClientList(3)
 	var clientArray [5]*Client
 
 	for i := 0; i < 5; i++ {
@@ -95,7 +89,7 @@ func TestUnregisterClient(t *testing.T) {
 func TestGetClientIDList(t *testing.T) {
 	log.SetOutput(ioutil.Discard)
 	uniqueID = 0
-	newClientList := CreateClientList()
+	newClientList := CreateClientList(3)
 	var clientArray [5]*Client
 	var clientID []int
 

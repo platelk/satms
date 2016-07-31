@@ -38,7 +38,7 @@ func onClientConnect(ws *websocket.Conn) {
 // InitServerRoute initialize all the routes the HTTP server will handle
 func InitServerRoute() {
 	log.Println("Launching http server...")
-	clientList := CreateClientList()
+	clientList := CreateClientList(3)
 
 	http.HandleFunc("/client/register", func(w http.ResponseWriter, r *http.Request) {
 		log.Println("On [/client/register] call")
