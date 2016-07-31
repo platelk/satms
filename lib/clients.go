@@ -157,6 +157,7 @@ func (client *Client) Listen() (err error) {
 				log.Println("Client ", client.ID, " receive : ", msg)
 				if err == io.EOF {
 					client.quitChan <- true
+					return
 				}
 				msg.From = client.ID
 				client.MsgRecv <- &msg

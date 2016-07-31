@@ -5,7 +5,14 @@ WebSocket connectClient() {
     var ws = new WebSocket("ws://localhost:4242/client/connect");
     ws.onMessage.listen((MessageEvent m) {
       print("Message receive : ${m.data}");
-      querySelector("#msg_receive").appendHtml("<p>${m.data}</p>");
+      var msg = JSON.decode(m.data);
+      if (msg["topic"] == "msg") {
+        querySelector("#msg_receive").appendHtml("<p>${m.data}</p>");
+      } else if (msg["topic"] == "myId") {
+
+      } else if (msg["topic"] == "clientList") {
+        querySelector("#client_list").setInnerHtml("${msg['body']}");
+      }
     });
     return ws;
 }
@@ -21,7 +28,7 @@ void setupSending(WebSocket ws) {
 }
 
 void setupGetClientList(WebSocket ws) {
-  querySelector("#client_list").onClick.listen((MouseEvent e) {
+  querySelector("#submit_client_list").onClick.listen((MouseEvent e) {
     ws.sendString(JSON.encode({"topic": "clientList"}));
   });
 }
