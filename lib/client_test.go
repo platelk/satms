@@ -126,3 +126,16 @@ func TestGetClientIDList(t *testing.T) {
 		}
 	}
 }
+
+// TestCreateClient will verify if a new created client is correctly created
+func TestCreateClient(t *testing.T) {
+	newClient := CreateClient(nil)
+	newClient2 := CreateClient(nil)
+
+	if newClient == nil {
+		t.Error("New client not correctly created")
+	}
+	if newClient.ID == newClient2.ID {
+		t.Error("2 new create client have same ID !")
+	}
+}
