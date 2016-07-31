@@ -22,3 +22,9 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Dart
+
+pubspec.lock
+packages/
+.packages
