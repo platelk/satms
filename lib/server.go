@@ -18,8 +18,8 @@ func onClientConnect(ws *websocket.Conn) {
 	log.Println("New client connection")
 }
 
-// LaunchServer will launch a server that will handle client request
-func LaunchServer() {
+// Initialize all the routes the HTTP server will handle
+func InitServerRoute() {
 	log.Println("Launching http server...")
 	clientList := CreateClientList()
 
@@ -59,6 +59,10 @@ func LaunchServer() {
 
 		client.Listen()
 	}))
+}
 
+// LaunchServer will launch a server that will handle client request
+func LaunchServer() {
+	InitServerRoute()
 	http.ListenAndServe(":8080", nil)
 }
