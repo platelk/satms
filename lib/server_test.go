@@ -68,8 +68,8 @@ func TestClientMyId(t *testing.T) {
 	if msg.Topic != "myId" {
 		t.Error("Wrong topic receive")
 	}
-	if msg.Body != "1" {
-		t.Error("Wrong return")
+	if msg.Body != "9" {
+		t.Error("Wrong return, expected: 9 got ", msg.Body)
 	}
 }
 
@@ -90,7 +90,7 @@ func TestClientClient(t *testing.T) {
 	if msg.Topic != "clientList" {
 		t.Error("Wrong topic receive")
 	}
-	if msg.Body != "[1]" {
-		t.Error("Wrong return")
+	if msg.Body != "[9 10 8]" {
+		t.Error("Wrong return, expected: [9 10 8], got: ", msg.Body)
 	}
 }
