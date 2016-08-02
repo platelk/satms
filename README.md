@@ -37,6 +37,7 @@ The client example is wrote in [Dart](https://www.dartlang.org/), so first you h
     <you_favorite_browser> build/web/main.html
 
 Note: You have to launch the SATMS service first
+Note2: A build script is available in the client directory
 
 ## Author
 
