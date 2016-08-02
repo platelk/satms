@@ -8,5 +8,5 @@ import (
 
 func main() {
 	log.Println("Launching satms...")
-	satms.LaunchServer()
+	satms.LaunchServer(satms.Config{})
 }

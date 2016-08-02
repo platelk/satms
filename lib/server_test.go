@@ -11,7 +11,7 @@ import (
 )
 
 func BenchmarkNumberOfConnection(b *testing.B) {
-	go LaunchServer()
+	go LaunchServer(Config{})
 	address := "localhost:4242"
 	i := 0
 	time.Sleep(2 * time.Second)
@@ -37,7 +37,7 @@ func BenchmarkNumberOfConnection(b *testing.B) {
 
 func TestMain(m *testing.M) {
 	flag.Parse()
-	go LaunchServer()
+	go LaunchServer(Config{})
 	time.Sleep(2 * time.Second)
 	os.Exit(m.Run())
 }
