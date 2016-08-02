@@ -18,6 +18,26 @@ The message struct is quite simple :
 
 Actual the JSON format is used, but others could supported
 
+## How to install ?
+
+SATMS use go language so standard golang tools can be use:
+
+    go get -d github.com/platelk/satms
+    cd $GOPATH/src/github.com/platelk/satms
+    go build main.go
+    ./main
+
+## How to run the example ?
+
+The client example is wrote in [Dart](https://www.dartlang.org/), so first you have to download and install Dart, then :
+
+    cd $GOPATH/src/github.com/platelk/satms/example/client
+    pub get
+    pub build
+    <you_favorite_browser> build/web/main.html
+
+Note: You have to launch the SATMS service first
+
 ## Author
 
 - Kévin PLATEL : platel.kevin@gmail.com

@@ -28,6 +28,7 @@ _testmain.go
 pubspec.lock
 packages/
 .packages
+build/
 
 # Editor
 
