@@ -1,6 +1,7 @@
 package satms
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"testing"
@@ -9,7 +10,7 @@ import (
 )
 
 func BenchmarkNumberOfConnection(b *testing.B) {
-	//go LaunchServer()
+	go LaunchServer()
 	address := "localhost:4242"
 	i := 0
 	for {
@@ -29,5 +30,64 @@ func BenchmarkNumberOfConnection(b *testing.B) {
 		}
 		i++
 		fmt.Printf("Nb : %d\n", i)
+	}
+}
+
+func TestMain(m *testing.M) {
+	flag.Parse()
+	go LaunchServer()
+	os.Exit(m.Run())
+}
+
+func TestClientConnection(t *testing.T) {
+	address := "localhost:4242"
+	_, err := websocket.Dial(fmt.Sprintf("ws://%s/client/connect", address), "", fmt.Sprintf("http://%s/", address))
+
+	if err != nil {
+		t.Error("Client can't connect to server")
+	}
+}
+
+func TestClientMyId(t *testing.T) {
+	address := "localhost:4242"
+	ws, err := websocket.Dial(fmt.Sprintf("ws://%s/client/connect", address), "", fmt.Sprintf("http://%s/", address))
+
+	if err != nil {
+		t.Error("Client can't connect to server")
+	}
+
+	websocket.JSON.Send(ws, &Message{Topic: "myId"})
+	var msg Message
+	err = websocket.JSON.Receive(ws, &msg)
+	if err != nil {
+		t.Error("Error when receiving message")
+	}
+	if msg.Topic != "myId" {
+		t.Error("Wrong topic receive")
+	}
+	if msg.Body != "1" {
+		t.Error("Wrong return")
+	}
+}
+
+func TestClientClient(t *testing.T) {
+	address := "localhost:4242"
+	ws, err := websocket.Dial(fmt.Sprintf("ws://%s/client/connect", address), "", fmt.Sprintf("http://%s/", address))
+
+	if err != nil {
+		t.Error("Client can't connect to server")
+	}
+
+	websocket.JSON.Send(ws, &Message{Topic: "clientList"})
+	var msg Message
+	err = websocket.JSON.Receive(ws, &msg)
+	if err != nil {
+		t.Error("Error when receiving message")
+	}
+	if msg.Topic != "clientList" {
+		t.Error("Wrong topic receive")
+	}
+	if msg.Body != "[1]" {
+		t.Error("Wrong return")
 	}
 }
