@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"golang.org/x/net/websocket"
 )
@@ -13,6 +14,7 @@ func BenchmarkNumberOfConnection(b *testing.B) {
 	go LaunchServer()
 	address := "localhost:4242"
 	i := 0
+	time.Sleep(2 * time.Second)
 	for {
 		ws, err := websocket.Dial(fmt.Sprintf("ws://%s/client/connect", address), "", fmt.Sprintf("http://%s/", address))
 		client := CreateClient(ws)
@@ -36,6 +38,7 @@ func BenchmarkNumberOfConnection(b *testing.B) {
 func TestMain(m *testing.M) {
 	flag.Parse()
 	go LaunchServer()
+	time.Sleep(2 * time.Second)
 	os.Exit(m.Run())
 }
 
