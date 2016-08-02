@@ -82,8 +82,17 @@ func InitServerRoute() {
 	}))
 }
 
+// Config contain all the possible configuration of the satms server
+type Config struct {
+	Port int // default is 4242
+}
+
 // LaunchServer will launch a server that will handle client request
-func LaunchServer() {
+func LaunchServer(config Config) {
+	if config.Port == 0 {
+		config.Port = 4242
+	}
+
 	InitServerRoute()
-	http.ListenAndServe(":4242", nil)
+	http.ListenAndServe(fmt.Sprintf(":%d", config.Port), nil)
 }
